@@ -36,8 +36,9 @@ def add_user_to_db(telegram_id: int, role: str):
     conn = psycopg2.connect(os.getenv("DATABASE_URL"))
     cursor = conn.cursor()
     cursor.execute("INSERT INTO users (user_id, role) VALUES (%s, %s)", (user_id, role))
+    cursor.execute("""
         INSERT INTO users (telegram_id, role)
-        VALUES (?, ?)
+        VALUES (%s, %s)
         ON CONFLICT (telegram_id) DO NOTHING
     """, (telegram_id, role))
     conn.commit()
