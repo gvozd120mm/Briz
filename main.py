@@ -35,7 +35,7 @@ class AddAd(StatesGroup):
 def add_user_to_db(telegram_id: int, role: str):
     conn = psycopg2.connect(os.getenv("DATABASE_URL"))
     cursor = conn.cursor()
-    cursor.execute("""
+    cursor.execute("INSERT INTO users (user_id, role) VALUES (%s, %s)", (user_id, role))
         INSERT INTO users (telegram_id, role)
         VALUES (?, ?)
         ON CONFLICT (telegram_id) DO NOTHING
